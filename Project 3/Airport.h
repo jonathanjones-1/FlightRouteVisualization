@@ -11,4 +11,3 @@ class Airport
 	public:
 		Airport(string IATA, double latitudeDeg, double longitudeDeg);
 };
-

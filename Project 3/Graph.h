@@ -12,5 +12,12 @@ class Graph
 		map<Airport, vector<Airport>> adjList;
 	public:
 
+		void Graph (); 
 };
+
+
+void Graph::Graph()
+{
+
+}
 

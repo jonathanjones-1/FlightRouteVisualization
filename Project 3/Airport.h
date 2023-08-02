@@ -2,12 +2,16 @@
 #include<string>
 using namespace std;
 
-class Airport
+struct Airport
 {
-	private:
-		string IATA;
-		double latitudeDeg;
-		double longitudeDeg;
-	public:
-		Airport(string IATA, double latitudeDeg, double longitudeDeg);
+	// Constructor
+	Airport(const string& name, double lat, double lon)
+		: iata(name), latitudeDeg(lat), longitudeDeg(lon) {}
+
+	// Member functions
+	string iata;
+	double latitudeDeg, longitudeDeg;
+
+	// 
+	bool operator==(const Airport& rhs) const { return iata == rhs.iata; }
 };

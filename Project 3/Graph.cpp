@@ -1,4 +1,4 @@
-#include "Graph.h"
+⁶#include "Graph.h"
 #include <fstream>
 #include <iostream>
 
@@ -8,21 +8,11 @@ using namespace std;
 
 Graph::Graph()
 {
-		ifstream airportsFile; 
-
-	
+	ifstream airportsFile; 
 
 
-
-
-
-
-
-
-
-
-
-		ifstream routes; 
+	       
+	ifstream routes; 
 
 
 

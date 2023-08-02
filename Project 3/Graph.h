@@ -9,9 +9,8 @@ class Graph
 {
 	private:
 		// Adjacency list representation
-		map<Airport, vector<Airport>> adjList;
+		unordered_map<Airport, unordered_set<Airport, Airport::Hash>Airport::Hash> adjList;
 	public:
-
 		Graph (); 
 };
 

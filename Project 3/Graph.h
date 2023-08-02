@@ -1,7 +1,8 @@
 #pragma once
 #include <string>
 #include <vector>
-#include <map>
+#include <unoredered_map>
+#include <unordered_set>
 #include "Airport.h"
 using namespace std;
 
@@ -12,7 +13,7 @@ class Graph
 		unordered_map<Airport, unordered_set<Airport, Airport::Hash>Airport::Hash> adjList;
 	public:
 		Graph (); 
-};
+}
 
 
 

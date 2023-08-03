@@ -13,6 +13,8 @@ class Graph
 		unordered_map<Airport, unordered_set<Airport, Airport::Hash>, Airport::Hash> adjList;
 	public:
 		Graph (); 
+
+		void dijkstraAlg(); //left it as void as I will figure out what to   	return late 
 }
 
 

@@ -10,7 +10,7 @@ Graph::Graph()
 {
 	ifstream airportsFile; 
 
-	inFile.open("airports.csv");
+	airportsFile.open("airports.csv");
 
 	while (!airportsFile.eof())
 	{
@@ -18,7 +18,7 @@ Graph::Graph()
 	}
 
 	       
-	ifstream routes; 
+	//ifstream routes; 
 
 
 

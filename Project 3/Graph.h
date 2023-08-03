@@ -2,7 +2,8 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
-#include <unordered_set>
+#include <set>
+#include <queue>
 #include "Airport.h"
 using namespace std;
 
@@ -15,6 +16,8 @@ public:
 	Graph();
 	void printKeys();
 	void printGraph();
+
+	int BFS(string source, string destination);
 	/*
 	double haversineCalc(double lat1, lat2, lat3, lat4);
 

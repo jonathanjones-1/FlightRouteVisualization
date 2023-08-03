@@ -125,6 +125,39 @@ void Graph::printGraph()
     }
 }
 
+// Breadth first search to calculate the most direct path (fewest intermediate airports)
+int Graph::BFS(string source, string destination)
+{
+    queue<string> adj;
+    set<string> visited;
+    int count = 1;
+
+    visited.insert(source);
+    adj.push(source);
+
+    while (!adj.empty())
+    {
+        for (auto iter = adjList[source].begin(); iter != adjList[source].end(); iter++)
+        {
+            // Make sure this airport has not already been identified
+            if (visited.count(iter->iata) != 0)
+                continue;
+            // Check if the path has been found
+            else if (iter->iata == destination)
+                return count;
+            else
+            {
+                visited.insert(iter->iata);
+                adj.push(iter->iata);
+            }
+        }
+
+        adj.pop();
+    }
+
+    // No path exists between source and destination airport
+    return -1;
+}
 
 double Graph::haversineCalc(double lat1, long1, lat2, long2)
 {

@@ -12,9 +12,8 @@ class Graph
 		// Adjacency list representation
 		unordered_map<Airport, unordered_set<Airport, Airport::Hash>, Airport::Hash> adjList;
 	public:
-
 		Graph (); 
-};
+}
 
 
 

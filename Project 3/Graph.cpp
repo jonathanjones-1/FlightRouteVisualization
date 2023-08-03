@@ -71,9 +71,21 @@ Graph::Graph()
     }
 }
 
-double Graph::haversineCalc(double lat1, lat2, lat3, lat4)
+double Graph::haversineCalc(double lat1, long1, lat2, long2)
 {
+		lat1 = (lat1 * M_PI / 180);
 		
+		long1 = (long1 * M_PI / 180);
+
+		lat2 = (lat2 * M_PI / 180);
+
+		long2 = (long2 * M_PI / 180);
+
+		double a = sin((lat2 - lat1)/2); 
+		
+		double b = sin((long2 - long1)/2); 
+
+		return * earthRadKm * asin(sqrt(a * a + cos(lat1) * cos(lat2) * b * b)); 
 }
 
 void Graph::dijkstraAlg()

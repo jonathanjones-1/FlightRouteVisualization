@@ -1,4 +1,4 @@
-⁶#include "Graph.h"
+#include "Graph.h"
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -12,7 +12,7 @@ Graph::Graph()
 
 	inFile.open("airports.csv");
 
-	while (!inFile.eof())
+	while (!airportsFile.eof())
 	{
 		
 	}

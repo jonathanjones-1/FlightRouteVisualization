@@ -4,7 +4,7 @@
 #include <string>
 #include <cctype>
 
-using namespace std
+using namespace std;
 
 Graph::Graph() 
 {

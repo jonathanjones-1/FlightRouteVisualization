@@ -90,6 +90,7 @@ double Graph::haversineCalc(double lat1, long1, lat2, long2)
 
 void Graph::dijkstraAlg()
 {
-		/*  Because we need to calculate the distance, I will be implementing the Haversine formula to calculate the distance between these airports.*/ 
+		/*  Because we need to calculate the distance, I will be implementing the Haversine formula to calculate the distance between these airports.
+Also, I made this method void and without input as I haven't figured out how to start this portion, feel free to change anything/start this!*/ 
 }
 

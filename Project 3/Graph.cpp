@@ -56,12 +56,9 @@ Graph::Graph()
 
             if (getline(iss, sourceAirportName, ',') && getline(iss, destinationAirportName, ',')) 
 											{
-                
-                // Find the corresponding Airport objects in the adjList and update the adjacency accordingly
-                auto sourceAirportIt = findAirportByName(sourceAirportName);
-                auto destinationAirportIt = findAirportByName(destinationAirportName);
 
-                if (sourceAirportIt != adjList.end() && destinationAirportIt != adjList.end()) {
+                if (sourceAirportIt != adjList.end() && destinationAirportIt != adjList.end() && !sourceAirportName.empty() && destinationAirportName.empty()) 
+													{
                     adjList[sourceAirportIt->first].insert(destinationAirportIt->first);
                     adjList[destinationAirportIt->first].insert(sourceAirportIt->first);
                 }

@@ -114,7 +114,7 @@ double Graph::haversineCalc(double lat1, long1, lat2, long2)
 		return * earthRadKm * asin(sqrt(a * a + cos(lat1) * cos(lat2) * b * b)); 
 }
 
-*/
+/*
 
 void Graph::dijkstraAlg()
 {

@@ -3,7 +3,9 @@
 #include <iostream>
 #include <string>
 #include <cctype>
-
+#include <math.h>
+#include <cmath> 
+#define earthRadKm 6371.0 
 using namespace std
 
 Graph::Graph() 
@@ -71,6 +73,6 @@ Graph::Graph()
 
 void Graph::dijkstraAlg()
 {
-
+		/*  Because we need to calculate the distance, I will be implementing the Haversine formula to calculate the distance between these airports.*/ 
 }
 

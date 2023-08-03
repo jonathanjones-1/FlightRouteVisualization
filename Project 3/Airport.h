@@ -20,7 +20,7 @@ struct Airport
 	{
 		size_t operator()(const Airport& ap) const
 		{
-			return std::hash<std::string>()(ap.iata);
+			return hash<string>()(ap.iata);
 		}
 	};
 

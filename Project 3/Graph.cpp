@@ -69,5 +69,8 @@ Graph::Graph()
     }
 }
 
+void Graph::dijkstraAlg()
+{
 
+}
 

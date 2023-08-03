@@ -28,10 +28,14 @@ Graph::Graph()
             string unimportant, latitude, longitude, iataCode;
 
             // Ignore the first 4 columns
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 3; i++)
             {
                 getline(iss, unimportant, ',');
             }
+            // Avoid airport names containing commas
+            getline(iss, unimportant, '"');
+            getline(iss, unimportant, '"');
+            getline(iss, unimportant, ',');
 
             getline(iss, latitude, ',');
             getline(iss, longitude, ',');
@@ -43,18 +47,18 @@ Graph::Graph()
 
             getline(iss, iataCode, ',');
 
-            if (!iataCode.empty())
+            if (!iataCode.empty() && iataCode.size() >= 3)
             {
                 double lat = stod(latitude);
                 double lon = stod(longitude);
                 Airport airport(iataCode, lat, lon);
-                adjList[airport];
+                adjList[iataCode].push_back(airport);
             }
         }
 
         airportFile.close();
     }
-
+    cout << "So far, there are " << adjList.size() << " airports in the graph!" << endl;
 
     ifstream routeFile("files/routes.csv");
 
@@ -75,25 +79,50 @@ Graph::Graph()
             getline(iss, sourceAirportName, ',');
             getline(iss, unimportant, ',');
             getline(iss, destinationAirportName, ',');
-
-            Airport source(sourceAirportName, NULL, NULL), destination(destinationAirportName, NULL, NULL);
-
-            if (adjList.find(source) != adjList.end() && adjList.find(destination) != adjList.end())
+            cout << sourceAirportName << " " << destinationAirportName << endl;
+            if (adjList.find(sourceAirportName) != adjList.end() && adjList.find(destinationAirportName) != adjList.end())
             {
-                source.latitudeDeg = adjList.find(source)->first.latitudeDeg;
-                source.longitudeDeg = adjList.find(source)->first.longitudeDeg;
-                destination.latitudeDeg = adjList.find(destination)->first.latitudeDeg;
-                destination.longitudeDeg = adjList.find(destination)->first.longitudeDeg;
-
-                adjList[source].insert(destination);
-                adjList[destination].insert(source);
+                Airport source = adjList.find(sourceAirportName)->second.at(0);
+                Airport destination = adjList.find(destinationAirportName)->second.at(0);
+                adjList[sourceAirportName].push_back(destination);
+                adjList[destinationAirportName].push_back(source);
             }
         }
 
         routeFile.close();
     }
+    
+    // Remove any airports with 0 adjacent airports
+    auto iter = adjList.begin();
+    while (iter != adjList.end())
+    {
+        if (iter->second.size() == 1)
+            iter = adjList.erase(iter);
+        else
+            ++iter;
+    }
+    
+    cout << "Now, there are " << adjList.size() << " airports in the graph!" << endl;
+}
 
-    cout << "There are " << adjList.size() << " airports in the graph!" << endl;
+void Graph::printKeys()
+{
+    for (auto airport : adjList)
+    {
+        cout << airport.second.at(0).iata << " {" << airport.second.at(0).latitudeDeg << ", " << airport.second.at(0).longitudeDeg << "}" << endl;
+    }
+}
+
+void Graph::printGraph()
+{
+    for (auto airport : adjList)
+    {
+        for (auto adjacent : airport.second)
+        {
+            cout << adjacent.iata << " ";
+        }
+        cout << endl;
+    }
 }
 
 /*

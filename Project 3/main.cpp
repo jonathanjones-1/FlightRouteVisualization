@@ -4,7 +4,8 @@
 int main()
 {
 
-    Graph testGraph; 
+    Graph testGraph;
+    testGraph.printGraph();
 
     return 0;
 }

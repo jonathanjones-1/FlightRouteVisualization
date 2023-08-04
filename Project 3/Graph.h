@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
-#include <unordered_map>
+#include <map>
 #include "Airport.h"
 using namespace std;
 
@@ -9,7 +9,7 @@ class Graph
 {
 private:
 	// Adjacency list representation
-	unordered_map<string, vector<Airport>> adjList;
+	map<string, vector<Airport>> adjList;
 
 	// Helper functions
 	double haversineCalc(double lat1, double long1, double lat2, double long2);

@@ -40,24 +40,6 @@ Graph::Graph()
             getline(iss, unimportant, '"');
             getline(iss, unimportant, ',');
 
-
-									/* This is the logic I'd like to use
-
-									if (airportName.front() == '"' && airportName.back() != '"') 
-										{
-                string part;
-                while (getline(iss, part, ',')) 
-													{
-                    airportName += "," + part;
-                    if (part.back() == '"') 
-																{
-                        break;
-                    }
-                }
-            }
-
-									*/
-
             getline(iss, latitude, ',');
             getline(iss, longitude, ',');
 
@@ -80,18 +62,16 @@ Graph::Graph()
         airportFile.close();
     }
 
-    // Cleanup the current graph
     auto iter = adjList.begin();
     while (iter != adjList.end())
     {
         // Remove any airports that currently have an adjacency list > 1
-        if (iter->second.size() == 1)
+        if (iter->second.size() > 1)
             iter = adjList.erase(iter);
-        // Remove improper airport names
-        else if (!isalpha(iter->first.at(0)) || !isupper(iter->first.at(0)))
+        else if (!isupper(iter->first.at(0)))
             iter = adjList.erase(iter);
         else
-            ++iter;
+            iter++;
     }
 
     cout << "So far, there are " << adjList.size() << " airports in the graph!" << endl;
@@ -128,7 +108,7 @@ Graph::Graph()
 
         routeFile.close();
     }
-    
+    /*
     // Remove any airports with 0 adjacent airports
     auto iter = adjList.begin();
     while (iter != adjList.end())
@@ -138,7 +118,7 @@ Graph::Graph()
         else
             ++iter;
     }
-    
+    */
     cout << "Now, there are " << adjList.size() << " airports in the graph!" << endl;
 }
 

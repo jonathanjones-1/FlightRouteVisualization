@@ -176,12 +176,28 @@ double Graph::Dijkstra(string source, string destination)
     vector<string> p(adjList.size(), "-1");
     vector<double> d(adjList.size(), INT_MAX);
     
-    set<string> computed;
+    vector<string> computed;
     set<string> uncomputed;
 
+    // Initialize V - S by placing all vertices into it
     for (auto iter = adjList.begin(); iter != adjList.end(); iter++)
     {
         uncomputed.insert(iter->first);
+    }
+    // d[0] is the source airport
+    d[0] = 0;
+    computed.push_back(source);
+    int iter = 0;
+
+    while (!uncomputed.empty())
+    {
+        for (int i = 1; i < adjList[computed.at(iter)].size(); i++)
+        {
+            double distance = haversineCalc(adjList[computed.at(iter)].at(0).latitudeDeg, adjList[computed.at(iter)].at(0).longitudeDeg,
+                adjList[computed.at(iter)].at(i).latitudeDeg, adjList[computed.at(iter)].at(i).longitudeDeg);
+
+            // for (int j = 0; j < compu)
+        }
     }
 }
 

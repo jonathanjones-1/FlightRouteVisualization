@@ -1,3 +1,6 @@
+#define _USE_MATH_DEFINES
+#define earthRadKm 6371.0
+
 #include "Graph.h"
 #include <fstream>
 #include <sstream>
@@ -5,8 +8,8 @@
 #include <string>
 #include <cctype>
 #include <math.h>
-#include <cmath> 
-#define earthRadKm 6371.0 
+#include <set>
+#include <queue>
 using namespace std;
 
 Graph::Graph()
@@ -141,19 +144,19 @@ int Graph::BFS(string source, string destination)
         int cLevelSize = 0;
         for (int i = 0; i < pLevelSize; i++)
         {
-            for (auto iter = adjList[adj.front()].begin(); iter != adjList[adj.front()].end(); iter++)
+            for (int i = 1; i < adjList[adj.front()].size(); i++)
             {
                 // Make sure this airport has not already been identified
-                if (visited.count(iter->iata) != 0)
+                if (visited.count(adjList[adj.front()].at(i).iata) != 0)
                     continue;
                 // Check if the path has been found
-                else if (iter->iata == destination)
+                else if (adjList[adj.front()].at(i).iata == destination)
                     // Returns the length of the shortest path
                     return ++count;
                 else
                 {
-                    visited.insert(iter->iata);
-                    adj.push(iter->iata);
+                    visited.insert(adjList[adj.front()].at(i).iata);
+                    adj.push(adjList[adj.front()].at(i).iata);
                     cLevelSize++;
                 }
             }
@@ -168,7 +171,21 @@ int Graph::BFS(string source, string destination)
     return -1;
 }
 
-double Graph::haversineCalc(double lat1, long1, lat2, long2)
+double Graph::Dijkstra(string source, string destination)
+{
+    vector<string> p(adjList.size(), "-1");
+    vector<double> d(adjList.size(), INT_MAX);
+    
+    set<string> computed;
+    set<string> uncomputed;
+
+    for (auto iter = adjList.begin(); iter != adjList.end(); iter++)
+    {
+        uncomputed.insert(iter->first);
+    }
+}
+
+double Graph::haversineCalc(double lat1, double long1, double lat2, double long2)
 {
 		lat1 = (lat1 * M_PI / 180);
 		
@@ -182,7 +199,7 @@ double Graph::haversineCalc(double lat1, long1, lat2, long2)
 		
 		double b = sin((long2 - long1)/2); 
 
-		return * earthRadKm * asin(sqrt(a * a + cos(lat1) * cos(lat2) * b * b)); 
+		return earthRadKm * asin(sqrt(a * a + cos(lat1) * cos(lat2) * b * b)); 
 }
 
 /*

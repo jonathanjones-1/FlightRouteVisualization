@@ -5,18 +5,8 @@
 using namespace std; 
 using namespace chrono; 
 
-int main()
+void timeBFS(const Graph& testGraph, string source, string destination)
 {
-
-    Graph testGraph;
-    testGraph.printGraph();
-
-
-			//I'll reduce the clutter in a bit, just writing now. 
-
-			string test1 = "LAX"; 
-			string test2 = "JFK";
-
 			auto start = high_resolution_clock::now(); 
 
 			int iataCodeCount = testGraph.BFS(test1, test2); 
@@ -30,9 +20,10 @@ int main()
 
     cout << "Breadth-first search executed in " << duration.count() << " milliseconds!" << endl;
 			cout << "Breadth-first search's path included " << iataCodeCount << " pairs!" << endl;  
+}
 
-
-
+void timeDijkstra(const Graph& testGraph, string source, string destination)
+{
 			auto start = high_resolution_clock::now();
 			
 			iataCodeCount = testGraph.Dijkstra(test1, test2); 
@@ -43,8 +34,24 @@ int main()
 
 			cout << "Dijkstra's Algorithm executed in " << duration.count() << " milliseconds!" << endl; 
 			cout << "Dijkstra's Algorithm's path included << iataCodeCount << " pairs!" << endl; 
-			
-			
+}
 
+
+int main()
+{
+
+    Graph testGraph;
+    testGraph.printGraph();
+
+
+			//I'll reduce the clutter in a bit, just writing now. 
+
+			string test1 = "LAX"; 
+			string test2 = "JFK";
+
+			timeBFS(testGraph, test1, test2); 
+
+			timeDijkstra(testGraph, test1, test2); 
+			
     return 0;
 }

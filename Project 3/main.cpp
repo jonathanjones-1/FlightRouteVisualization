@@ -12,6 +12,8 @@ int main()
     testGraph.printGraph();
 
 
+			//I'll reduce the clutter in a bit, just writing now. 
+
 			string test1 = "LAX"; 
 			string test2 = "JFK";
 
@@ -26,14 +28,22 @@ int main()
 
 			auto duration = duration_cast <milliseconds>(stop - start); 
 
-    cout << "Breadth-first search executed in " << duration.count() << "milliseconds!" << endl;
+    cout << "Breadth-first search executed in " << duration.count() << " milliseconds!" << endl;
 			cout << "Breadth-first search's path included " << iataCodeCount << " pairs!" << endl;  
 
 
 
 			auto start = high_resolution_clock::now();
 			
-			iataCodeCount = testGraph.
+			iataCodeCount = testGraph.Dijkstra(test1, test2); 
+	
+			auto stop = high_resolution_clock::now(); 
+
+			auto duration = duration_cast<milliseconds>(stop - start);
+
+			cout << "Dijkstra's Algorithm executed in " << duration.count() << " milliseconds!" << endl; 
+			cout << "Dijkstra's Algorithm's path included << iataCodeCount << " pairs!" << endl; 
+			
 			
 
     return 0;

@@ -160,16 +160,22 @@ void Graph::printKeys()
 
 void Graph::printGraph()
 {
+    int position = 0;
+
     for (auto airport : adjList)
     {
+        int count = 1;
+        cout << endl << " " << ++position << ". ";
         for (auto adjacent : airport.second)
         {
+            if (count % 25 == 0)
+                cout << endl << "     ";
             cout << adjacent.iata << " ";
+            count++;
         }
+
         cout << endl;
     }
-
-    cout << endl << "There are " << adjList.size() << " airports in the graph!" << endl;
 }
 
 // Breadth first search to calculate the most direct path (fewest intermediate airports)
@@ -177,7 +183,7 @@ int Graph::BFS(string source, string destination)
 {
     queue<string> adj;
     set<string> visited;
-    int count = 1;
+    int count = 0;
     int pLevelSize = 1;
 
     visited.insert(source);
@@ -238,23 +244,26 @@ bool Graph::checkList(const string& iata, vector<string>& airplanes)
 
 double Graph::Dijkstra(string source, string destination)
 {
-    vector<string> p(adjList.size(), "-1");
-    vector<double> d(adjList.size(), INT_MAX);
-    
-    vector<string> computed;
-    vector<string> uncomputed;
+    cout << endl << "Calculating Dijkstra's..." << endl;
 
-    // Initialize V - S by placing all vertices into it
+    map<string, string> p;
+    map<string, double> d;
+
+    set<string> computed;
+    set<string> uncomputed;
+
+    // This algorithm will compute all distances between airports connected to the source
     for (auto iter = adjList.begin(); iter != adjList.end(); iter++)
     {
-        uncomputed.push_back(iter->first);
+        p[iter->first] = "-1";
+        d[iter->first] = INT_MAX;
+        uncomputed.insert(iter->first);
     }
 
-    int index = scanList(source);
-
     // This is the source airport
-    d[index] = 0;
-    computed.push_back(source);
+    d[source] = 0;
+    computed.insert(source);
+    uncomputed.erase(uncomputed.find(source));
 
     // Process edges adjacent to the source vertex
     for (int i = 1; i < adjList[source].size(); i++)
@@ -262,43 +271,54 @@ double Graph::Dijkstra(string source, string destination)
         double distance = haversineCalc(adjList[source].at(0).latitudeDeg, adjList[source].at(0).longitudeDeg,
             adjList[source].at(i).latitudeDeg, adjList[source].at(i).longitudeDeg);
 
-        index = scanList(adjList[source].at(i).iata);
-        d[index] = distance;
-        p[index] = computed.back();
+        d[adjList[source].at(i).iata] = distance;
+        p[adjList[source].at(i).iata] = source;
     }
 
-    while (computed.size() != adjList.size())
+    int count = 0;
+    while (!uncomputed.empty())
     {
         // Find the smallest distance uncomputed airport
-        int smallestINDX = 0;
-        for (int i = 0; i < d.size(); i++)
+        string smallest;
+        double minDistance = INT_MAX;
+        for (auto airport : uncomputed)
         {
-            if (d.at(i) < d.at(smallestINDX))
+            if (d[airport] < minDistance)
             {
-                if (!checkList(uncomputed.at(i), computed))
-                    smallestINDX = i;
+                if (computed.count(airport) == 0)
+                {
+                    smallest = airport;
+                    minDistance = d[airport];
+                }
             }
         }
 
-        computed.push_back(uncomputed.at(smallestINDX));
-
-        // Relax edges
-        for (int i = 1; i < adjList[computed.back()].size(); i++)
+        if (smallest.size() != 0)
         {
-            double distance = haversineCalc(adjList[computed.back()].at(0).latitudeDeg, adjList[computed.back()].at(0).longitudeDeg,
-                adjList[computed.back()].at(i).latitudeDeg, adjList[computed.back()].at(i).longitudeDeg);
+            computed.insert(smallest);
+            uncomputed.erase(smallest);
 
-            index = scanList(adjList[computed.back()].at(i).iata);
-            if (d[smallestINDX] + distance < d[index])
+            // Relax edges
+            for (int i = 1; i < adjList[smallest].size(); i++)
             {
-                d[index] = d[smallestINDX] + distance;
-                p[index] = computed.back();
+                double distance = haversineCalc(adjList[smallest].at(0).latitudeDeg, adjList[smallest].at(0).longitudeDeg,
+                    adjList[smallest].at(i).latitudeDeg, adjList[smallest].at(i).longitudeDeg);
+
+                if (d[smallest] + distance < d[adjList[smallest].at(i).iata])
+                {
+                    d[adjList[smallest].at(i).iata] = d[smallest] + distance;
+                    p[adjList[smallest].at(i).iata] = smallest;
+                }
             }
         }
+        else
+            break;
     }
-    
-    index = scanList(destination);
-    return d[index];
+
+    if (d[destination] != INT_MAX)
+        return d[destination];
+    else
+        return -1;
 }
 
 double Graph::haversineCalc(double lat1, double long1, double lat2, double long2)

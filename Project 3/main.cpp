@@ -12,61 +12,66 @@
 using namespace std; 
 using namespace chrono; 
 
-void timeBFS(Graph& testGraph, string source, string destination)
+void timeBFS(Graph& graph, string source, string destination)
 {
-	auto start = high_resolution_clock::now(); 
-
-	int iataCodeCount = testGraph.BFS(source, destination); 
-		
+	auto start = high_resolution_clock::now();
+	int iataCodeCount = graph.BFS(source, destination);
 	auto stop = high_resolution_clock::now(); 
 
 	// Using chrono to time the algorithms, feel free to change       
     // milliseconds here to nanoseconds if needed. 
 
-	auto duration = duration_cast <milliseconds>(stop - start); 
+	auto duration = duration_cast <nanoseconds>(stop - start); 
 
-    cout << "Breadth-first search executed in " << duration.count() << " milliseconds!" << endl;
-	cout << "Breadth-first search's path included " << iataCodeCount << " pairs!" << endl;  
+    cout << endl << "Breadth-first search executed in " << duration.count() << " milliseconds!" << endl;
 }
 
-void timeDijkstra(Graph& testGraph, string source, string destination)
+void timeDijkstra(Graph& graph, string source, string destination)
 {
 	auto start = high_resolution_clock::now();
-			
-	int iataCodeCount = testGraph.Dijkstra(source, destination); 
-	
+	int iataCodeCount = graph.Dijkstra(source, destination);
 	auto stop = high_resolution_clock::now(); 
-
-	auto duration = duration_cast<milliseconds>(stop - start);
+	auto duration = duration_cast<nanoseconds>(stop - start);
 
 	cout << "Dijkstra's Algorithm executed in " << duration.count() << " milliseconds!" << endl; 
-	cout << "Dijkstra's Algorithm's path included " << iataCodeCount << " pairs!" << endl; 
+	cout << "Dijkstra's shortest path is " << iataCodeCount << " kilometers." << endl;
 }
-/*
-void testSamplePairs(const Graph& graph)
+
+void testSamplePairs(Graph& graph, string filename)
 {
-		//This is assuming the sample file we created follows a simple format
-		//like this: JFK, LAX   (and so on, each line containing a pair of IATA
-		//codes 		
+		// Assumes pairs are formatted correctly (e.g., LAX YMP)	
+		ifstream inFile(filename);  
 
-		ifstream sampleInput(PUT FILE NAME HERE); 
-
-		string line; 
-
-		while(getline(sampleInput, line)
+		if (inFile.is_open())
 		{
-				istringstream temp(line);
-				string sourceAirport, destinationAirport; 
-	
-				getline(temp, sourceAirport, ',');
-				getline(temp, destination, ','); 
+			string line;
+			while (getline(inFile, line))
+			{
+				istringstream in(line);
+				string source, destination;
 
-				timeBFS(graph, sourceAirport, destinationAirport); 
-				timeDijkstra(graph, sourceAirport, destinationAirport); 
+				in >> source;
+				in >> destination;
 
+				cout << endl << "Source: " << source << ", Destination: " << destination << endl;
+
+				int num = graph.BFS(source, destination);
+
+				if (num == -1)
+					cout << endl << "Sorry, there is no path between the specified airports." << endl;
+				else
+				{
+					timeBFS(graph, source, destination);
+					cout << "BFS shortest path uses " << num << " intermediate airports." << endl;
+					timeDijkstra(graph, source, destination);
+				}
+			}
+
+			inFile.close();
 		}
+		else
+			cout << endl << "Cannot open file." << endl;
 }
-*/
 
 void printWelcome()
 {
@@ -82,64 +87,76 @@ void printWelcome()
 void printMenu()
 {
 	cout << endl << setw(20) << "Options:" << endl;
-	cout << setw(32) << setfill('=') << "" << setfill(' ') << endl;
-	cout << "1. View a list of airports" << setw(6) << "+" << endl;
-	cout << "2. Determine flight distances" << setw(3) << "+" << endl;
-	cout << "3. View predetermined routes" << setw(4) << "+" << endl;
-	cout << "4. Exit" << setw(25) << "+" << endl;
-	cout << setw(32) << setfill('=') << "" << setfill(' ') << endl;
+	cout << setw(33) << setfill('=') << "" << setfill(' ') << endl;
+	cout << "1. View a list of airports" << setw(7) << "+" << endl;
+	cout << "2. Determine flight distances" << setw(4) << "+" << endl;
+	cout << "3. View predetermined routes" << setw(5) << "+" << endl;
+	cout << "4. View possible direct flights" << setw(2) << "+" << endl;
+	cout << "5. Exit" << setw(26) << "+" << endl;
+	cout << setw(33) << setfill('=') << "" << setfill(' ') << endl;
 	cout << setw(19) << "Choice: ";
 }
 
 int main()
 {
 	Graph airports;
+	string line;
 
 	printWelcome();
 	printMenu();
 
 	int option;
-	cin >> option;
 
-	while (option != 4)
+	getline(cin, line);
+	istringstream in(line);
+	in >> option;
+
+	while (option != 5)
 	{
 		if (option == 1)
 			airports.printKeys();
 
 		else if (option == 2)
 		{
-			string line, source, destination;
+			string source, destination;
 			cout << "Enter IATA codes for a source and destination airport: ";
-			
-			// Discards the input buffer
-			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
 			getline(cin, line);
 			istringstream in(line);
 
 			in >> source;
 			in >> destination;
 
-			cout << endl << "BFS shortest path uses " << airports.BFS(source, destination) << " intermediate airports." << endl;
-			cout << endl << "Dijkstra's shortest path is " << airports.Dijkstra(source, destination) << " kilometers." << endl;
+			int num = airports.BFS(source, destination);
+
+			if (num == -1)
+				cout << endl << "Sorry, there is no path between the specified airports." << endl;
+			else
+			{
+				timeBFS(airports, source, destination);
+				cout << "BFS shortest path uses " << num << " intermediate airports." << endl;
+				timeDijkstra(airports, source, destination);
+			}
 		}
+
+		else if (option == 3)
+		{
+			cout << "Enter the name of a file to read: ";
+
+			getline(cin, line);
+			testSamplePairs(airports, line);
+		}
+
+		else if (option == 4)
+			airports.printGraph();
 
 		else
 			cout << "Invalid input!" << endl;
 
-			//testSamplePairs(testGraph); 
-
-			//Do not run the testSamplePairs without a sample text file. 
-
-			/*
-			string test1 = "LAX";
-			string test2 = "JFK";
-
-			timeBFS(testGraph, test1, test2);
-
-			timeDijkstra(testGraph, test1, test2);
-			*/
 		printMenu();
-		cin >> option;
+		getline(cin, line);
+		istringstream in(line);
+		in >> option;
 	}
 
     return 0;

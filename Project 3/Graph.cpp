@@ -70,16 +70,32 @@ Graph::Graph()
 
             if (!iataCode.empty() && iataCode.size() >= 3)
             {
-                double lat = stod(latitude);
-                double lon = stod(longitude);
-                Airport airport(iataCode, lat, lon);
-                adjList[iataCode].push_back(airport);
+                    double lat = stod(latitude);
+                    double lon = stod(longitude);
+                    Airport airport(iataCode, lat, lon);
+                    adjList[iataCode].push_back(airport);
             }
         }
 
         airportFile.close();
     }
+
+    // Cleanup the current graph
+    auto iter = adjList.begin();
+    while (iter != adjList.end())
+    {
+        // Remove any airports that currently have an adjacency list > 1
+        if (iter->second.size() == 1)
+            iter = adjList.erase(iter);
+        // Remove improper airport names
+        else if (!isalpha(iter->first.at(0)) || !isupper(iter->first.at(0)))
+            iter = adjList.erase(iter);
+        else
+            ++iter;
+    }
+
     cout << "So far, there are " << adjList.size() << " airports in the graph!" << endl;
+    printGraph();
 
     ifstream routeFile("files/routes.csv");
 
@@ -217,6 +233,7 @@ double Graph::Dijkstra(string source, string destination)
             // for (int j = 0; j < compu)
         }
     }
+    return 0;
 }
 
 double Graph::haversineCalc(double lat1, double long1, double lat2, double long2)

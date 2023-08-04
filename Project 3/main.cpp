@@ -1,11 +1,10 @@
-#include <SFML/Graphics.hpp>
 #include "Graph.h"
 
 int main()
 {
 
     Graph testGraph;
-    testGraph.printGraph();
+    // testGraph.printGraph();
 
     return 0;
 }

@@ -148,6 +148,7 @@ int Graph::BFS(string source, string destination)
                     continue;
                 // Check if the path has been found
                 else if (iter->iata == destination)
+                    // Returns the length of the shortest path
                     return ++count;
                 else
                 {

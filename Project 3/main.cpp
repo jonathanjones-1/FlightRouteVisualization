@@ -33,7 +33,7 @@ void timeDijkstra(const Graph& testGraph, string source, string destination)
 			auto duration = duration_cast<milliseconds>(stop - start);
 
 			cout << "Dijkstra's Algorithm executed in " << duration.count() << " milliseconds!" << endl; 
-			cout << "Dijkstra's Algorithm's path included << iataCodeCount << " pairs!" << endl; 
+			cout << "Dijkstra's Algorithm's path included " << iataCodeCount << " pairs!" << endl; 
 }
 
 

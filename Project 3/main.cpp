@@ -43,9 +43,6 @@ int main()
     Graph testGraph;
     testGraph.printGraph();
 
-
-			//I'll reduce the clutter in a bit, just writing now. 
-
 			string test1 = "LAX"; 
 			string test2 = "JFK";
 

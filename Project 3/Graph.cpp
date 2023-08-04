@@ -131,27 +131,35 @@ int Graph::BFS(string source, string destination)
     queue<string> adj;
     set<string> visited;
     int count = 1;
+    int pLevelSize = 1;
 
     visited.insert(source);
     adj.push(source);
 
     while (!adj.empty())
     {
-        for (auto iter = adjList[source].begin(); iter != adjList[source].end(); iter++)
+        int cLevelSize = 0;
+        for (int i = 0; i < pLevelSize; i++)
         {
-            // Make sure this airport has not already been identified
-            if (visited.count(iter->iata) != 0)
-                continue;
-            // Check if the path has been found
-            else if (iter->iata == destination)
-                return count;
-            else
+            for (auto iter = adjList[adj.front()].begin(); iter != adjList[adj.front()].end(); iter++)
             {
-                visited.insert(iter->iata);
-                adj.push(iter->iata);
+                // Make sure this airport has not already been identified
+                if (visited.count(iter->iata) != 0)
+                    continue;
+                // Check if the path has been found
+                else if (iter->iata == destination)
+                    return ++count;
+                else
+                {
+                    visited.insert(iter->iata);
+                    adj.push(iter->iata);
+                    cLevelSize++;
+                }
             }
         }
 
+        pLevelSize = cLevelSize;
+        count++;
         adj.pop();
     }
 

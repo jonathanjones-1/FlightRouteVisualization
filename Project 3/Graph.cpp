@@ -8,12 +8,15 @@
 #include <string>
 #include <cctype>
 #include <math.h>
+#include <algorithm>
 #include <set>
 #include <queue>
 using namespace std;
 
 Graph::Graph()
 {
+    cout << "Loading airports..." << endl;
+
     // First, read in the datasets
     ifstream airportFile("files/airports.csv");
 
@@ -54,6 +57,7 @@ Graph::Graph()
             {
                     double lat = stod(latitude);
                     double lon = stod(longitude);
+                    iataCode.erase(remove(iataCode.begin(), iataCode.end(), '"'), iataCode.end());
                     Airport airport(iataCode, lat, lon);
                     adjList[iataCode].push_back(airport);
             }
@@ -69,13 +73,11 @@ Graph::Graph()
         // Remove any airports that currently have an adjacency list > 1
         if (iter->second.size() > 1)
             iter = adjList.erase(iter);
-        else if (!isupper(iter->first.at(1)))
+        else if (!isupper(iter->first.at(0)))
             iter = adjList.erase(iter);
         else
             iter++;
     }
-
-    cout << "So far, there are " << adjList.size() << " airports in the graph!" << endl;
 
     ifstream routeFile("files/routes.csv");
 
@@ -101,8 +103,25 @@ Graph::Graph()
             {
                 Airport source = adjList.find(sourceAirportName)->second.at(0);
                 Airport destination = adjList.find(destinationAirportName)->second.at(0);
-                adjList[sourceAirportName].push_back(destination);
-                adjList[destinationAirportName].push_back(source);
+                
+                // Make sure not to add duplicates to adjacency lists
+                bool found = false;
+                for (int i = 0; i < adjList[sourceAirportName].size(); i++)
+                {
+                    if (adjList[sourceAirportName].at(i).iata == destinationAirportName)
+                        found = true;
+                }
+                if (!found)
+                    adjList[sourceAirportName].push_back(destination);
+
+                found = false;
+                for (int i = 0; i < adjList[destinationAirportName].size(); i++)
+                {
+                    if (adjList[destinationAirportName].at(i).iata == sourceAirportName)
+                        found = true;
+                }
+                if (!found)
+                    adjList[destinationAirportName].push_back(source);
             }
         }
 
@@ -119,16 +138,24 @@ Graph::Graph()
             ++iter;
     }
 
-    cout << "Now, there are " << adjList.size() << " airports in the graph!" << endl;
-
 }
 
 void Graph::printKeys()
 {
+    int count = 0;
+    bool first = true;
+
+    cout << "{ ";
     for (auto airport : adjList)
     {
-        cout << airport.second.at(0).iata << " {" << airport.second.at(0).latitudeDeg << ", " << airport.second.at(0).longitudeDeg << "}" << endl;
+        if (count % 25 == 0 && !first)
+            cout << "}" << endl << "{ ";
+        cout << airport.first << " ";
+        count++;
+        if (first)
+            first = false;
     }
+    cout << "}" << endl;
 }
 
 void Graph::printGraph()
@@ -141,6 +168,8 @@ void Graph::printGraph()
         }
         cout << endl;
     }
+
+    cout << endl << "There are " << adjList.size() << " airports in the graph!" << endl;
 }
 
 // Breadth first search to calculate the most direct path (fewest intermediate airports)
@@ -159,19 +188,19 @@ int Graph::BFS(string source, string destination)
         int cLevelSize = 0;
         for (int i = 0; i < pLevelSize; i++)
         {
-            for (int i = 1; i < adjList[adj.front()].size(); i++)
+            for (int j = 1; j < adjList[adj.front()].size(); j++)
             {
                 // Make sure this airport has not already been identified
-                if (visited.count(adjList[adj.front()].at(i).iata) != 0)
+                if (visited.count(adjList[adj.front()].at(j).iata) != 0)
                     continue;
                 // Check if the path has been found
-                else if (adjList[adj.front()].at(i).iata == destination)
-                    // Returns the length of the shortest path
-                    return ++count;
+                else if (adjList[adj.front()].at(j).iata == destination)
+                    // Returns the number of intermediate airports
+                    return count;
                 else
                 {
-                    visited.insert(adjList[adj.front()].at(i).iata);
-                    adj.push(adjList[adj.front()].at(i).iata);
+                    visited.insert(adjList[adj.front()].at(j).iata);
+                    adj.push(adjList[adj.front()].at(j).iata);
                     cLevelSize++;
                 }
             }

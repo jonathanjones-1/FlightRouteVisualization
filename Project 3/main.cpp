@@ -120,6 +120,7 @@ int main()
 			in >> destination;
 
 			cout << endl << "BFS shortest path uses " << airports.BFS(source, destination) << " intermediate airports." << endl;
+			cout << endl << "Dijkstra's shortest path is " << airports.Dijkstra(source, destination) << " kilometers." << endl;
 		}
 
 		else

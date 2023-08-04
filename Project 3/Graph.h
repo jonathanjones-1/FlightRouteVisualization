@@ -13,6 +13,8 @@ private:
 
 	// Helper functions
 	double haversineCalc(double lat1, double long1, double lat2, double long2);
+	int scanList(const string& iata);
+	bool checkList(const string& iata, vector<string>& airplanes);
 
 public:
 	Graph();

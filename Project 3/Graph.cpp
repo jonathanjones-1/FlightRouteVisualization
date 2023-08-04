@@ -215,35 +215,90 @@ int Graph::BFS(string source, string destination)
     return -1;
 }
 
+int Graph::scanList(const string& iata)
+{
+    int count = 0;
+    for (auto airport : adjList)
+    {
+        if (airport.first == iata)
+            return count;
+        count++;
+    }
+}
+
+bool Graph::checkList(const string& iata, vector<string>& airplanes)
+{
+    for (int i = 0; i < airplanes.size(); i++)
+    {
+        if (airplanes.at(i) == iata)
+            return true;
+    }
+    return false;
+}
+
 double Graph::Dijkstra(string source, string destination)
 {
     vector<string> p(adjList.size(), "-1");
     vector<double> d(adjList.size(), INT_MAX);
     
     vector<string> computed;
-    set<string> uncomputed;
+    vector<string> uncomputed;
 
     // Initialize V - S by placing all vertices into it
     for (auto iter = adjList.begin(); iter != adjList.end(); iter++)
     {
-        uncomputed.insert(iter->first);
+        uncomputed.push_back(iter->first);
     }
-    // d[0] is the source airport
-    d[0] = 0;
+
+    int index = scanList(source);
+
+    // This is the source airport
+    d[index] = 0;
     computed.push_back(source);
-    int iter = 0;
 
-    while (!uncomputed.empty())
+    // Process edges adjacent to the source vertex
+    for (int i = 1; i < adjList[source].size(); i++)
     {
-        for (int i = 1; i < adjList[computed.at(iter)].size(); i++)
-        {
-            double distance = haversineCalc(adjList[computed.at(iter)].at(0).latitudeDeg, adjList[computed.at(iter)].at(0).longitudeDeg,
-                adjList[computed.at(iter)].at(i).latitudeDeg, adjList[computed.at(iter)].at(i).longitudeDeg);
+        double distance = haversineCalc(adjList[source].at(0).latitudeDeg, adjList[source].at(0).longitudeDeg,
+            adjList[source].at(i).latitudeDeg, adjList[source].at(i).longitudeDeg);
 
-            // for (int j = 0; j < compu)
+        index = scanList(adjList[source].at(i).iata);
+        d[index] = distance;
+        p[index] = computed.back();
+    }
+
+    while (computed.size() != adjList.size())
+    {
+        // Find the smallest distance uncomputed airport
+        int smallestINDX = 0;
+        for (int i = 0; i < d.size(); i++)
+        {
+            if (d.at(i) < d.at(smallestINDX))
+            {
+                if (!checkList(uncomputed.at(i), computed))
+                    smallestINDX = i;
+            }
+        }
+
+        computed.push_back(uncomputed.at(smallestINDX));
+
+        // Relax edges
+        for (int i = 1; i < adjList[computed.back()].size(); i++)
+        {
+            double distance = haversineCalc(adjList[computed.back()].at(0).latitudeDeg, adjList[computed.back()].at(0).longitudeDeg,
+                adjList[computed.back()].at(i).latitudeDeg, adjList[computed.back()].at(i).longitudeDeg);
+
+            index = scanList(adjList[computed.back()].at(i).iata);
+            if (d[smallestINDX] + distance < d[index])
+            {
+                d[index] = d[smallestINDX] + distance;
+                p[index] = computed.back();
+            }
         }
     }
-    return 0;
+    
+    index = scanList(destination);
+    return d[index];
 }
 
 double Graph::haversineCalc(double lat1, double long1, double lat2, double long2)

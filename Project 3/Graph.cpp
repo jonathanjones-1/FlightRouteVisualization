@@ -40,6 +40,24 @@ Graph::Graph()
             getline(iss, unimportant, '"');
             getline(iss, unimportant, ',');
 
+
+									/* This is the logic I'd like to use
+
+									if (airportName.front() == '"' && airportName.back() != '"') 
+										{
+                string part;
+                while (getline(iss, part, ',')) 
+													{
+                    airportName += "," + part;
+                    if (part.back() == '"') 
+																{
+                        break;
+                    }
+                }
+            }
+
+									*/
+
             getline(iss, latitude, ',');
             getline(iss, longitude, ',');
 

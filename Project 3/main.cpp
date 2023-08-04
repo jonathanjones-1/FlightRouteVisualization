@@ -1,6 +1,8 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <chrono>
+#include <fstream>
+#include <sstream>
 #include "Graph.h"
 
 using namespace std; 
@@ -37,12 +39,41 @@ void timeDijkstra(Graph& testGraph, string source, string destination)
 	cout << "Dijkstra's Algorithm's path included " << iataCodeCount << " pairs!" << endl; 
 }
 
+void testSamplePairs(const Graph& graph)
+{
+		//This is assuming the sample file we created follows a simple format
+		//like this: JFK, LAX   (and so on, each line containing a pair of IATA
+		//codes 		
+
+		ifstream sampleInput(PUT FILE NAME HERE); 
+
+		string line; 
+
+		while(getline(sampleInput, line)
+		{
+				istringstream temp(line);
+				string sourceAirport, destinationAirport; 
+	
+				getline(temp, sourceAirport, ',');
+				getline(temp, destination, ','); 
+
+				timeBFS(graph, sourceAirport, destinationAirport); 
+				timeDijkstra(graph, sourceAirport, destinationAirport); 
+
+		}
+}
+
 
 int main()
 {
 
     Graph testGraph;
     testGraph.printGraph();
+
+
+	//testSamplePairs(testGraph); 
+
+	//Do not run the testSamplePairs without a sample text file. 
 
 	/*
 	string test1 = "LAX"; 

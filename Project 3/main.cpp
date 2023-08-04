@@ -42,7 +42,7 @@ int main()
 {
 
     Graph testGraph;
-    testGraph.printGraph();
+    testGraph.printKeys();
 
 	/*
 	string test1 = "LAX"; 

@@ -62,20 +62,20 @@ Graph::Graph()
         airportFile.close();
     }
 
+    // Cleanup the current graph
     auto iter = adjList.begin();
     while (iter != adjList.end())
     {
         // Remove any airports that currently have an adjacency list > 1
         if (iter->second.size() > 1)
             iter = adjList.erase(iter);
-        else if (!isupper(iter->first.at(0)))
+        else if (!isupper(iter->first.at(1)))
             iter = adjList.erase(iter);
         else
             iter++;
     }
 
     cout << "So far, there are " << adjList.size() << " airports in the graph!" << endl;
-    printGraph();
 
     ifstream routeFile("files/routes.csv");
 
@@ -96,7 +96,7 @@ Graph::Graph()
             getline(iss, sourceAirportName, ',');
             getline(iss, unimportant, ',');
             getline(iss, destinationAirportName, ',');
-            cout << sourceAirportName << " " << destinationAirportName << endl;
+
             if (adjList.find(sourceAirportName) != adjList.end() && adjList.find(destinationAirportName) != adjList.end())
             {
                 Airport source = adjList.find(sourceAirportName)->second.at(0);
@@ -108,9 +108,9 @@ Graph::Graph()
 
         routeFile.close();
     }
-    /*
-    // Remove any airports with 0 adjacent airports
-    auto iter = adjList.begin();
+
+    // Get rid of any airports not connected to the graph
+    iter = adjList.begin();
     while (iter != adjList.end())
     {
         if (iter->second.size() == 1)
@@ -118,8 +118,9 @@ Graph::Graph()
         else
             ++iter;
     }
-    */
+
     cout << "Now, there are " << adjList.size() << " airports in the graph!" << endl;
+
 }
 
 void Graph::printKeys()
